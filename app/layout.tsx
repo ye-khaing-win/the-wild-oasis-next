@@ -1,7 +1,5 @@
 import React, { FC, ReactNode } from "react";
-import Navigation from "./_components/Navigation";
 import { Metadata } from "next";
-import Logo from "./_components/Logo";
 import "./_styles/globals.css";
 import { Josefin_Sans } from "next/font/google";
 import classNames from "classnames";
@@ -39,7 +37,11 @@ const RootLayout: FC<TRootLayoutProps> = (props) => {
         <Container>
           <Header />
 
-          <main>{children}</main>
+          <div className="flex-1 px-8 py-12">
+            <main className="max-w-7xl mx-auto">
+              {children}
+            </main>
+          </div>
         </Container>
       </body>
     </html>
