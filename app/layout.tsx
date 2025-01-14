@@ -4,7 +4,7 @@ import "./_styles/globals.css";
 import { Josefin_Sans } from "next/font/google";
 import classNames from "classnames";
 import Header from "./_components/Header";
-import Container from "./_components/Container";
+// import Container from "./_components/Container";
 
 const josefin = Josefin_Sans({
   subsets: ["latin"],
@@ -34,15 +34,15 @@ const RootLayout: FC<TRootLayoutProps> = (props) => {
           "bg-primary-950 text-primary-100 min-h-screen flex flex-col antialiased relative"
         )}
       >
-        <Container>
-          <Header />
+        {/* <Container> */}
+        <Header />
 
-          <div className="flex-1 px-8 py-12">
-            <main className="max-w-7xl mx-auto">
-              {children}
-            </main>
-          </div>
-        </Container>
+        <div className="flex-1 px-8 py-12 grid">
+          <main className="max-w-7xl mx-auto w-full">
+            {children}
+          </main>
+        </div>
+        {/* </Container> */}
       </body>
     </html>
   );
