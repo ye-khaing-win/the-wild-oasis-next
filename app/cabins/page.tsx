@@ -1,15 +1,33 @@
 import classNames from "classnames";
 import { Metadata } from "next";
-import React from "react";
-import { getCabins } from "../_lib/data-service";
-import CabinCard from "../_components/CabinCard";
+import React, { FC, Suspense } from "react";
+import CabinList from "../_components/CabinList";
+import Spinner from "../_components/Spinner";
+import Filter from "../_components/Filter";
+
+export type TFilter =
+  | "all"
+  | "small"
+  | "medium"
+  | "large"
+  | undefined;
+
+export interface TCabinsPageProps {
+  searchParams?: {
+    capacity: TFilter;
+  };
+}
 
 export const metadata: Metadata = {
   title: "Cabins",
 };
 
-const Page = async () => {
-  const cabins = await getCabins();
+const Page: FC<TCabinsPageProps> = async ({
+  searchParams,
+}) => {
+  console.log(searchParams);
+
+  const filter = searchParams?.capacity ?? "all";
 
   return (
     <div>
@@ -32,13 +50,12 @@ const Page = async () => {
         vacation. Welcome to paradise.
       </p>
 
-      {cabins.length > 0 && (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2">
-          {cabins.map((cabin) => (
-            <CabinCard key={cabin.id} cabin={cabin} />
-          ))}
-        </div>
-      )}
+      <div className="flex justify-end mb-8">
+        <Filter />
+      </div>
+      <Suspense fallback={<Spinner />}>
+        <CabinList filter={filter} />
+      </Suspense>
     </div>
   );
 };
