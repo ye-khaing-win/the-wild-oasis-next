@@ -1,5 +1,8 @@
-// import { eachDayOfInterval } from "date-fns";
+import { eachDayOfInterval } from "date-fns";
+import { TCountry } from "../types/country";
 import { supabase } from "./supabase";
+import { TSetting } from "../types/setting";
+import { TCabin } from "../types/cabin";
 // import { TBooking } from "../types/booking";
 
 /////////////
@@ -13,13 +16,13 @@ export async function getCabin(id: number) {
     .single();
 
   // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
+  await new Promise((res) => setTimeout(res, 1000));
 
   if (error) {
     console.error(error);
   }
 
-  return data;
+  return data as TCabin;
 }
 
 // export async function getCabinPrice(id: number) {
@@ -98,63 +101,70 @@ export const getCabins = async function () {
 //   return data;
 // }
 
-// export async function getBookedDatesByCabinId(
-//   cabinId: number
-// ) {
-//   let today = new Date();
-//   today.setUTCHours(0, 0, 0, 0);
-//   today = today.toISOString();
+export async function getBookedDatesByCabinId(
+  cabinId: number
+) {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
 
-//   // Getting all bookings
-//   const { data, error } = await supabase
-//     .from("bookings")
-//     .select("*")
-//     .eq("cabinId", cabinId)
-//     .or(`startDate.gte.${today},status.eq.checked-in`);
+  const todayDateStr = today.toISOString();
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Bookings could not get loaded");
-//   }
+  // Getting all bookings
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("cabinId", cabinId)
+    .or(
+      `startDate.gte.${todayDateStr},status.eq.checked-in`
+    );
 
-//   // Converting to actual dates to be displayed in the date picker
-//   const bookedDates = data
-//     .map((booking) => {
-//       return eachDayOfInterval({
-//         start: new Date(booking.startDate),
-//         end: new Date(booking.endDate),
-//       });
-//     })
-//     .flat();
+  await new Promise((res) => setTimeout(res, 3000));
 
-//   return bookedDates;
-// }
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not get loaded");
+  }
 
-// export async function getSettings() {
-//   const { data, error } = await supabase
-//     .from("settings")
-//     .select("*")
-//     .single();
+  // Converting to actual dates to be displayed in the date picker
+  const bookedDates = data
+    .map((booking) => {
+      return eachDayOfInterval({
+        start: new Date(booking.startDate),
+        end: new Date(booking.endDate),
+      });
+    })
+    .flat();
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Settings could not be loaded");
-//   }
+  return bookedDates;
+}
 
-//   return data;
-// }
+export async function getSettings() {
+  const { data, error } = await supabase
+    .from("settings")
+    .select("*")
+    .single();
 
-// export async function getCountries() {
-//   try {
-//     const res = await fetch(
-//       "https://restcountries.com/v2/all?fields=name,flag"
-//     );
-//     const countries = await res.json();
-//     return countries;
-//   } catch {
-//     throw new Error("Could not fetch countries");
-//   }
-// }
+  await new Promise((res) => setTimeout(res, 3000));
+
+  if (error) {
+    console.error(error);
+    throw new Error("Settings could not be loaded");
+  }
+
+  return data as TSetting;
+}
+
+export async function getCountries() {
+  try {
+    const res = await fetch(
+      "https://restcountries.com/v2/all?fields=name,flag"
+    );
+    const countries = await res.json();
+    return countries as TCountry[];
+  } catch {
+    throw new Error("Could not fetch countries");
+  }
+}
 
 // /////////////
 // // CREATE

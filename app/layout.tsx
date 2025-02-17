@@ -4,6 +4,7 @@ import "./_styles/globals.css";
 import { Josefin_Sans } from "next/font/google";
 import classNames from "classnames";
 import Header from "./_components/Header";
+import { ReservationProvider } from "./_components/ReservationContext";
 // import Container from "./_components/Container";
 
 const josefin = Josefin_Sans({
@@ -39,7 +40,9 @@ const RootLayout: FC<TRootLayoutProps> = (props) => {
 
         <div className="flex-1 px-8 py-12 grid">
           <main className="max-w-7xl mx-auto w-full">
-            {children}
+            <ReservationProvider>
+              {children}
+            </ReservationProvider>
           </main>
         </div>
         {/* </Container> */}

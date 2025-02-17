@@ -1,6 +1,17 @@
-import React from "react";
+import React, { FC } from "react";
+import { getCountries } from "../_lib/data-service";
 
-const SelectCountry = () => {
+interface TSelectCountryProps {
+  defaultCountry: string;
+  name: string;
+  id: string;
+  className: string;
+}
+
+const SelectCountry: FC<TSelectCountryProps> = async (
+  props
+) => {
+  const { defaultCountry, name, id, className } = props;
   const countries = await getCountries();
 
   const flag =
